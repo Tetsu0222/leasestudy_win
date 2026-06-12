@@ -1,0 +1,25 @@
+## .NET / VB.Net
+bin/
+obj/
+*.user
+*.suo
+*.userprefs
+
+## Visual Studio
+.vs/
+*.vbproj.user
+
+## SQL Server / 機密
+*.bak
+*.mdf
+*.ldf
+connection.local.txt
+.env
+.env.local
+
+## OS
+Thumbs.db
+.DS_Store
+
+## Docker / NuGet
+.nuget-cache/
