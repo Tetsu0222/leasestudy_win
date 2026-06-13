@@ -109,6 +109,7 @@ docker exec leasestudy-mssql $sql -S localhost -U sa -P $pwd_ -C -I -d LeaseStud
 docker exec leasestudy-mssql $sql -S localhost -U sa -P $pwd_ -C -I -d LeaseStudyDb -i /scripts/procs/usp_CreateContract.sql
 docker exec leasestudy-mssql $sql -S localhost -U sa -P $pwd_ -C -I -d LeaseStudyDb -i /scripts/procs/usp_CalculateLeaseFee.sql
 docker exec leasestudy-mssql $sql -S localhost -U sa -P $pwd_ -C -I -d LeaseStudyDb -i /scripts/procs/usp_GetContractList.sql
+docker exec leasestudy-mssql $sql -S localhost -U sa -P $pwd_ -C -I -d LeaseStudyDb -i /scripts/procs/usp_GetDebtList.sql
 ```
 
 対話的に SQL を叩きたいときは:

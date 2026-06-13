@@ -124,7 +124,11 @@ Namespace UI
         End Sub
 
         Private Sub ShowDebtList()
-            Console.WriteLine("[未実装] 債権情報一覧")
+            Dim list = _debtRepo.GetDebtList()
+            If list.Count = 0 Then
+                Console.WriteLine("債権情報はまだありません。")
+                Return
+            End If
         End Sub
 
         Private Sub RegisterBilling()
