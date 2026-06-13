@@ -12,6 +12,7 @@ Namespace UI
     Public Class MenuPresenter
 
         Private ReadOnly _contractRepo As New ContractRepository()
+        Private ReadOnly _debtRepo As New DebtRepository()
 
         Public Sub Run()
             Do
