@@ -105,6 +105,9 @@ docker exec leasestudy-mssql $sql -S localhost -U sa -P $pwd_ -C -I -d master -i
 # マスタデータ投入
 docker exec leasestudy-mssql $sql -S localhost -U sa -P $pwd_ -C -I -d LeaseStudyDb -i /scripts/02_master.sql
 
+# テストデータ投入
+docker exec leasestudy-mssql $sql -S localhost -U sa -P $pwd_ -C -I -d LeaseStudyDb -i /scripts/03_testdata_debt.sql
+
 # ストアドプロシージャ投入
 docker exec leasestudy-mssql $sql -S localhost -U sa -P $pwd_ -C -I -d LeaseStudyDb -i /scripts/procs/usp_CreateContract.sql
 docker exec leasestudy-mssql $sql -S localhost -U sa -P $pwd_ -C -I -d LeaseStudyDb -i /scripts/procs/usp_CalculateLeaseFee.sql
