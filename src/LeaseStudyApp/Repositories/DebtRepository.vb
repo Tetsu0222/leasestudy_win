@@ -57,6 +57,19 @@ Namespace Repositories
             Return list
         End Function
 
+        ' 請求書発行
+        Public Function IssueBilling(receivableId As Integer) As Boolean
+            Using conn = SqlConnectionFactory.Create()
+                conn.Open()
+                Using cmd As New SqlCommand("dbo.usp_IssueBilling", conn)
+                    cmd.CommandType = CommandType.StoredProcedure
+                    cmd.Parameters.Add("@ReceivableId", SqlDbType.Int).Value = receivableId
+                    cmd.ExecuteNonQuery()
+                End Using
+            End Using
+            Return True
+        End Function
+
     End Class
 
 End Namespace
