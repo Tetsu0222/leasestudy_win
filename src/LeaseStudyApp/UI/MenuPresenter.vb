@@ -170,7 +170,34 @@ Namespace UI
         End Sub
 
         Private Sub RegisterPayment()
-            Console.WriteLine("[未実装] 入金登録")
+            Dim billedStatus As Integer = 20
+            Dim list = _debtRepo.GetDebtList(status:=billedStatus)
+            If list.Count = 0 Then
+                Console.WriteLine("請求情報はありません。")
+                Return
+            End If
+            Console.WriteLine()
+            Console.WriteLine("債権ID  契約ID  支払期日    請求額         入金額         ステータス    入金日      入金額(実績)")
+            Console.WriteLine(New String("-"c, 100))
+            For Each c In list
+                Dim paymentDate = If(c.PaymentDate.HasValue, c.PaymentDate.Value.ToString("yyyy-MM-dd"), "-")
+                Dim paymentAmount = If(c.PaymentAmount.HasValue, c.PaymentAmount.Value.ToString("N0"), "-")
+                Console.WriteLine($"{c.ReceivableId,6} {c.ContractId,7} {c.DueDate:yyyy-MM-dd} {c.DueAmount,14:N0} {c.PaidAmount,14:N0} {c.StatusName,-10} {paymentDate,-10} {paymentAmount,14}")
+            Next
+            Console.WriteLine("債権ID > ")
+            Console.WriteLine("  0) 終了")
+            Dim receivableId = CInt(Console.ReadLine())
+            Console.Write("入金額(円) > ")
+            Dim paymentAmount = Decimal.Parse(Console.ReadLine())
+            If receivableId = 0 Then
+                Return
+            End If
+            Dim result = _debtRepo.RecordPayment(receivableId, paymentAmount)
+            If result Then
+                Console.WriteLine("入金情報の登録が完了しました。")
+            Else
+                Console.WriteLine("入金情報の登録に失敗しました。")
+            End If
         End Sub
 
     End Class

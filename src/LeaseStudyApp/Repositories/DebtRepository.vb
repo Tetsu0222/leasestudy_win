@@ -70,6 +70,20 @@ Namespace Repositories
             Return True
         End Function
 
+        ' 入金登録
+        Public Function RecordPayment(receivableId As Integer, paymentAmount As Decimal) As Boolean
+            Using conn = SqlConnectionFactory.Create()
+                conn.Open()
+                Using cmd As New SqlCommand("dbo.usp_RecordPayment", conn)
+                    cmd.CommandType = CommandType.StoredProcedure
+                    cmd.Parameters.Add("@ReceivableId", SqlDbType.Int).Value = receivableId
+                    cmd.Parameters.Add("@PaymentAmount", SqlDbType.Decimal).Value = paymentAmount
+                    cmd.ExecuteNonQuery()
+                End Using
+            End Using
+            Return True
+        End Function
+
     End Class
 
 End Namespace

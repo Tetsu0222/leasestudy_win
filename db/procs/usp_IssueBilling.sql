@@ -11,9 +11,21 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    UPDATE dbo.T_Receivable
-    SET Status = 20
-    WHERE ReceivableId = @ReceivableId;
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        UPDATE dbo.T_Receivable
+        SET Status = 20,
+            UpdatedAt = SYSDATETIME()
+        WHERE ReceivableId = @ReceivableId;
+        COMMIT TRANSACTION;
+
+    END TRY
+    BEGIN CATCH
+        IF @@TRANCOUNT > 0
+            ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH
 END
 GO
 
