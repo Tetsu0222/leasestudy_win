@@ -187,11 +187,17 @@ Namespace UI
             Console.WriteLine("債権ID > ")
             Console.WriteLine("  0) 終了")
             Dim receivableId = CInt(Console.ReadLine())
-            Console.Write("入金額(円) > ")
-            Dim paymentAmount = Decimal.Parse(Console.ReadLine())
             If receivableId = 0 Then
                 Return
             End If
+            Dim target = list.FirstOrDefault(Function(x) x.ReceivableId = receivableId)
+            If target Is Nothing Then
+                Console.WriteLine("指定された債権IDは請求一覧にありません。")
+                Return
+            End If
+            Console.WriteLine($"請求額: {target.DueAmount:N0} 円")
+            Console.Write("入金額(円) > ")
+            Dim paymentAmount = Decimal.Parse(Console.ReadLine())
             Dim result = _debtRepo.RecordPayment(receivableId, paymentAmount)
             If result Then
                 Console.WriteLine("入金情報の登録が完了しました。")
