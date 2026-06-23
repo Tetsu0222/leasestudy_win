@@ -16,12 +16,34 @@ BEGIN
     BEGIN TRY
         BEGIN TRANSACTION;
 
+        DECLARE @DueAmount      DECIMAL(15, 0);
+        DECLARE @CurrentPaid    DECIMAL(15, 0);
+        DECLARE @NewPaid        DECIMAL(15, 0);
+        DECLARE @NewStatus      INT;
+
+        SELECT @DueAmount   = DueAmount,
+               @CurrentPaid = PaidAmount
+        FROM dbo.T_Receivable
+        WHERE ReceivableId = @ReceivableId;
+
+        SET @NewPaid = @CurrentPaid + @PaymentAmount;
+
+        IF @NewPaid > @DueAmount
+        BEGIN
+            THROW 50001, N'入金額が請求額を超えています。', 1;
+        END
+
+        IF @NewPaid = @DueAmount
+            SET @NewStatus = 30;  -- 入金済
+        ELSE
+            SET @NewStatus = 40;  -- 一部入金
+
         INSERT INTO dbo.T_Payment (ReceivableId, PaymentDate, PaymentAmount)
         VALUES (@ReceivableId, ISNULL(@PaymentDate, CAST(SYSDATETIME() AS DATE)), @PaymentAmount);
 
         UPDATE dbo.T_Receivable
-        SET PaidAmount = PaidAmount + @PaymentAmount,
-            Status = 30,
+        SET PaidAmount = @NewPaid,
+            Status = @NewStatus,
             UpdatedAt = SYSDATETIME()
         WHERE ReceivableId = @ReceivableId;
 

@@ -180,9 +180,9 @@ Namespace UI
             Console.WriteLine("債権ID  契約ID  支払期日    請求額         入金額         ステータス    入金日      入金額(実績)")
             Console.WriteLine(New String("-"c, 100))
             For Each c In list
-                Dim paymentDate = If(c.PaymentDate.HasValue, c.PaymentDate.Value.ToString("yyyy-MM-dd"), "-")
-                Dim paymentAmount = If(c.PaymentAmount.HasValue, c.PaymentAmount.Value.ToString("N0"), "-")
-                Console.WriteLine($"{c.ReceivableId,6} {c.ContractId,7} {c.DueDate:yyyy-MM-dd} {c.DueAmount,14:N0} {c.PaidAmount,14:N0} {c.StatusName,-10} {paymentDate,-10} {paymentAmount,14}")
+                Dim paymentDateText = If(c.PaymentDate.HasValue, c.PaymentDate.Value.ToString("yyyy-MM-dd"), "-")
+                Dim paymentAmountText = If(c.PaymentAmount.HasValue, c.PaymentAmount.Value.ToString("N0"), "-")
+                Console.WriteLine($"{c.ReceivableId,6} {c.ContractId,7} {c.DueDate:yyyy-MM-dd} {c.DueAmount,14:N0} {c.PaidAmount,14:N0} {c.StatusName,-10} {paymentDateText,-10} {paymentAmountText,14}")
             Next
             Console.WriteLine("債権ID > ")
             Console.WriteLine("  0) 終了")
