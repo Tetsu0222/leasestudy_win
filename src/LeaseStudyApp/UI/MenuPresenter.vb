@@ -22,6 +22,7 @@ Namespace UI
                 Console.WriteLine("  2) リース料試算")
                 Console.WriteLine("  3) 契約登録")
                 Console.WriteLine("  4) 債権管理")
+                Console.WriteLine("  5) テスト")
                 Console.WriteLine("  0) 終了")
                 Console.Write("選択 > ")
                 Dim input = Console.ReadLine()
@@ -32,6 +33,7 @@ Namespace UI
                         Case "2" : SimulateLeaseFee()
                         Case "3" : CreateContract()
                         Case "4" : ManageDebt()
+                        Case "5" : RunTests()
                         Case "0" : Return
                         Case Else : Console.WriteLine("無効な選択です。")
                     End Select
@@ -204,6 +206,86 @@ Namespace UI
             Else
                 Console.WriteLine("入金情報の登録に失敗しました。")
             End If
+        End Sub
+
+        Private Sub RunTests()
+            Console.WriteLine("テスト機能が選択されました。")
+            Do
+                Console.WriteLine()
+                Console.WriteLine("======== メニュー ========")
+                Console.WriteLine("  1) リンクの実験")
+                Console.WriteLine("  2) じゃんけん")
+                Console.WriteLine("  0) 終了")
+                Console.Write("選択 > ")
+                Dim input = Console.ReadLine()
+
+                Try
+                    Select Case input
+                        Case "1" : Test1()
+                        Case "2" : Test2()
+                        Case "0" : Return
+                        Case Else : Console.WriteLine("無効な選択です。")
+                    End Select
+                Catch ex As Exception
+                    Console.WriteLine("[エラー] " & ex.Message)
+                End Try
+            Loop
+        End Sub
+
+        Private Sub Test1()
+            Dim list = _contractRepo.GetContractList()
+            If list.Count = 0 Then
+                Console.WriteLine("契約はまだありません。")
+                Return
+            End If
+            Console.Write("顧客コード > ")
+            Dim customerCode = Console.ReadLine()
+            If String.IsNullOrWhiteSpace(customerCode) Then
+                Console.WriteLine("顧客コードを入力してください。")
+                Return
+            End If
+            Dim target = list.FirstOrDefault(Function(x) x.CustomerCode = customerCode)
+            If target Is Nothing Then
+                Console.WriteLine("指定された顧客コードは契約一覧にありません。")
+                Return
+            End If
+            Console.WriteLine(target.ContractNo)
+        End Sub
+
+        Private Sub Test2()
+            Console.WriteLine("じゃんけんが選択されました。")
+            Do
+                Console.WriteLine()
+                Console.WriteLine("======== メニュー ========")
+                Console.WriteLine("  1) グー")
+                Console.WriteLine("  2) チョキ")
+                Console.WriteLine("  3) パー")
+                Console.WriteLine("  0) 終了")
+                Console.Write("選択 > ")
+                Dim input = Console.ReadLine()
+
+                Try
+                    Select Case input
+                        Case "0" : Return
+                        Case "1", "2", "3" : Console.WriteLine("選択された手: {0}", input)
+                        Case Else : Console.WriteLine("無効な選択です。")
+                    End Select
+                Catch ex As Exception
+                    Console.WriteLine("[エラー] " & ex.Message)
+                End Try
+                Dim random = New Random()
+                Dim computerChoice = random.Next(1, 4)
+                Console.WriteLine("コンピュータの手: {0}", computerChoice)
+                if input = computerChoice.ToString() Then
+                    Console.WriteLine("あいこです。")
+                ElseIf (input = "1" And computerChoice = 2) OrElse
+                       (input = "2" And computerChoice = 3) OrElse
+                       (input = "3" And computerChoice = 1) Then
+                    Console.WriteLine("おめでとうございます！勝ちました。")
+                Else
+                    Console.WriteLine("残念ですが、負けました。")
+                End If
+            Loop
         End Sub
 
     End Class
