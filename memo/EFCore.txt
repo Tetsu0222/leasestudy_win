@@ -1,0 +1,58 @@
+# EF Coreとは
+## 概要
+VB.NET でも Entity Framework Core（EF Core） を利用でき、.NET オブジェクトを使ってデータベース操作を行うための 軽量・高速・クロスプラットフォームな O/RM（オブジェクト関係マッパー） です。
+※実態として、クロスプラットフォームな O/RM。SQL を書かずに済む生産性と引き換えに、性能や発行 SQL の把握しづらさはトレードオフ
+SQL を直接書かずに、LINQ やエンティティクラスを通じてデータの取得・保存・更新ができます。
+
+## O/RM（オブジェクト関係マッパー）
+- .NET のクラス（エンティティ）をデータベースのテーブルに対応させる仕組み
+- SQL を直接書かずに LINQ でクエリできる
+- データの追加・更新・削除もオブジェクト操作で完結
+
+## EF Core の構成要素
+- エンティティクラス
+データベースのテーブルに対応するクラス。
+- DbContext
+  - データベースとのセッションと、取得したエンティティの変更追跡を担当
+    - 接続管理（セッション）
+    - 変更追跡 ← SaveChanges でなぜ自動で UPDATE が飛ぶのかの正体
+    - アイデンティティマップ ← 同じ主キーは1個しかメモリに乗らない仕組み
+    - LINQ 翻訳エンジン
+  - クエリ実行や SaveChanges() による保存を担当
+
+## モデルの作り方
+1.既存のデータベースからモデルを生成（スキャフォールディング）
+2.コードでモデルを手書きし、マイグレーションで DB を生成
+
+## 主な機能
+- LINQ によるクエリ
+Dim blogs = Await db.Blogs _
+    .Where(Function(b) b.Rating > 3) _
+    .OrderBy(Function(b) b.Url) _
+    .ToListAsync()
+
+- データの保存
+Dim blog = New Blog With {.Url = "http://sample.com"}
+db.Blogs.Add(blog)
+Await db.SaveChangesAsync()
+
+- マイグレーション
+  - モデルの変更に合わせて DB スキーマを進化させる仕組み
+  - EF Core (dotnet CLI): dotnet ef migrations add → dotnet ef database update
+  - EF6 / Visual Studio PMC: Add-Migration → Update-Database
+
+## このプロジェクトで触った具体要素
+- DbContext を継承して LeaseStudyDbContext を作成
+- OnConfiguring で接続文字列を渡し、SQL Server プロバイダを指定
+- DbSet(Of T) プロパティで LINQ クエリの入口を公開
+- OnModelCreating でテーブル名 (T_Contract) と主キーを明示
+- Ignore で「テーブルに存在しない列」を EF Core から隠す
+- 遅延実行: .ToList() の瞬間に SQL が発行される
+
+## LINQとストアドプロシージャの使い分け
+- 適切な書き方をすればオーバーヘッドが無視できるレベル（=N+1, トラッキング, 遅延実行を意識した書き方ができれば）
+- 保守性や生産性、可読性に重きを置く判断をした場合に使用する。さらに、「複雑な業務ロジックや大量データ処理はストアド / 生SQLに逃がす」住み分けを前提として使う
+
+## 補足
+レガシーな現場ではEFCoreではなくEF6が使われている可能性が高い。
+LINQの文法はほぼ同じだが、DbContext の設定方法は大きく違う

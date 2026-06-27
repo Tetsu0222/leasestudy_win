@@ -1,5 +1,7 @@
 Imports System
 Imports LeaseStudyApp.Repositories
+Imports LeaseStudyApp.Data
+Imports Microsoft.EntityFrameworkCore
 
 Namespace UI
 
@@ -233,23 +235,19 @@ Namespace UI
         End Sub
 
         Private Sub Test1()
-            Dim list = _contractRepo.GetContractList()
-            If list.Count = 0 Then
-                Console.WriteLine("契約はまだありません。")
-                Return
-            End If
-            Console.Write("顧客コード > ")
-            Dim customerCode = Console.ReadLine()
-            If String.IsNullOrWhiteSpace(customerCode) Then
-                Console.WriteLine("顧客コードを入力してください。")
-                Return
-            End If
-            Dim target = list.FirstOrDefault(Function(x) x.CustomerCode = customerCode)
-            If target Is Nothing Then
-                Console.WriteLine("指定された顧客コードは契約一覧にありません。")
-                Return
-            End If
-            Console.WriteLine(target.ContractNo)
+            ' EF Core 経由で T_Contract の ContractId 一覧を取得する最小実装。
+            ' (今は ContractId 以外の列は Ignore してあるので、ID しか取れない)
+            Using db As New LeaseStudyDbContext()
+                Dim ids = db.Contracts.Select(Function(c) c.ContractId).ToList()
+                If ids.Count = 0 Then
+                    Console.WriteLine("契約はまだありません。")
+                    Return
+                End If
+                Console.WriteLine($"契約件数: {ids.Count}")
+                For Each id In ids
+                    Console.WriteLine($"  ContractId = {id}")
+                Next
+            End Using
         End Sub
 
         Private Sub Test2()
