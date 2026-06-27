@@ -217,6 +217,7 @@ Namespace UI
                 Console.WriteLine("======== メニュー ========")
                 Console.WriteLine("  1) リンクの実験")
                 Console.WriteLine("  2) じゃんけん")
+                Console.WriteLine("  3) LINQのメソッドの実験")
                 Console.WriteLine("  0) 終了")
                 Console.Write("選択 > ")
                 Dim input = Console.ReadLine()
@@ -225,6 +226,7 @@ Namespace UI
                     Select Case input
                         Case "1" : Test1()
                         Case "2" : Test2()
+                        Case "3" : Test3()
                         Case "0" : Return
                         Case Else : Console.WriteLine("無効な選択です。")
                     End Select
@@ -284,6 +286,17 @@ Namespace UI
                     Console.WriteLine("残念ですが、負けました。")
                 End If
             Loop
+        End Sub
+
+        Private Sub Test3()
+            Dim numbers = {1, 2, 3, 4, 5, 6}
+            Dim evenNumbers = numbers.Where(Function(n) n Mod 2 = 0)
+            Dim doubled = numbers.Select(Function(n) n * 2)
+            Dim sorted = numbers.OrderByDescending(Function(n) n)
+            Console.WriteLine("ソートされた数値:")
+            For Each n In evenNumbers
+                Console.WriteLine(n)
+            Next
         End Sub
 
     End Class

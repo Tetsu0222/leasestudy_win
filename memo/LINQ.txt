@@ -1,0 +1,36 @@
+# 絞り込み系
+Where — 条件に合うものだけ抽出
+First / FirstOrDefault — 最初の1件
+Single / SingleOrDefault — 1件だけ存在する前提の抽出
+Take / Skip — ページングなどで利用
+
+# 変換・投影系
+Select — 必要な項目だけ取り出す
+SelectMany — 子コレクションをフラット化
+
+# 集計系
+Count
+Sum
+Average
+Max / Min
+
+# 重複・並び替え
+Distinct — 重複排除
+OrderBy / OrderByDescending
+ThenBy / ThenByDescending
+
+# グループ化・結合
+GroupBy — グループ化
+Join — 内部結合
+GroupJoin — グループ結合
+
+# コレクション変換
+ToList
+ToArray
+ToDictionary
+
+# 使用例
+Dim numbers = {1, 2, 3, 4, 5, 6}
+Dim evenNumbers = numbers.Where(Function(n) n Mod 2 = 0)
+Dim doubled = numbers.Select(Function(n) n * 2)
+Dim sorted = numbers.OrderByDescending(Function(n) n)
